@@ -1,51 +1,70 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
 import { Audio } from "expo-av";
 
 function QuestionScreen({ navigation, route }) {
   const { keySignature, harmonic, level } = route.params;
   const [multiple, setMultiple] = useState([]);
-  const [answer, setAnswer] = useState(0);
   const [cMajorScaleSound, setCMajorScaleSound] = useState();
   const [answerSound, setAnswerSound] = useState();
+  const [selectedSound, setSelectedSound] = useState();
   const [isCorrect, setIsCorrect] = useState(false);
   const [isSelected, setIsSelected] = useState(false);
-  const soundList = [
-    require("../mp3/C4.mp3"),
-    require("../mp3/D4.mp3"),
-    require("../mp3/E4.mp3"),
-    require("../mp3/F4.mp3"),
-    require("../mp3/G4.mp3"),
-    require("../mp3/A4.mp3"),
-    require("../mp3/B4.mp3"),
-    require("../mp3/C5.mp3"),
+  const answer = useRef();
+  const pitchList = [
+    {
+      scale: "도",
+      soundSource: require("../mp3/C4.mp3"),
+    },
+    {
+      scale: "레",
+      soundSource: require("../mp3/D4.mp3"),
+    },
+    {
+      scale: "미",
+      soundSource: require("../mp3/E4.mp3"),
+    },
+    {
+      scale: "파",
+      soundSource: require("../mp3/F4.mp3"),
+    },
+    {
+      scale: "솔",
+      soundSource: require("../mp3/G4.mp3"),
+    },
+    {
+      scale: "라",
+      soundSource: require("../mp3/A4.mp3"),
+    },
+    {
+      scale: "시",
+      soundSource: require("../mp3/B4.mp3"),
+    },
+    {
+      scale: "도",
+      soundSource: require("../mp3/C5.mp3"),
+    },
   ];
-  const pitchList = ["도", "레", "미", "파", "솔", "라", "시"];
 
   const setAnswerAndMultipleChoice = () => {
     const randomList = [];
-    for (let i = 0; i < 4; i++) {
-      const randomIdx = Math.floor(Math.random() * 7);
-      if (randomIdx === 0) {
-        const isLow = Math.round(Math.random) === 0 ? false : true;
-        if (isLow) {
-          randomList.push(0);
-        } else {
-          randomList.push(7);
-        }
-      } else {
+    let i = 0;
+    while (true) {
+      if (i === 4) {
+        break;
+      }
+      const randomIdx = Math.floor(Math.random() * 8);
+      if (randomList.indexOf(randomIdx) < 0) {
         randomList.push(randomIdx);
+        i++;
       }
     }
+    const choiceAnswer = randomList[Math.floor(Math.random() * 4)];
+    console.log("랜덤 리스트:", randomList);
+    console.log("정답:", choiceAnswer);
+    answer.current = choiceAnswer;
 
-    const answerIdx = randomList[Math.floor(Math.random() * 4)];
-    const multipleChoiceList = [];
-    for (let i = 0; i < randomList.length; i++) {
-      multipleChoiceList.push(pitchList[randomList[i]]);
-    }
-
-    setMultiple(multipleChoiceList);
-    setAnswer(answerIdx);
+    setMultiple(randomList);
   };
 
   const playCMajorScaleSound = async () => {
@@ -54,23 +73,33 @@ function QuestionScreen({ navigation, route }) {
     );
     setCMajorScaleSound(sound);
 
-    console.log("sound play.");
     await sound.playAsync();
   };
 
-  const playAnswerSound = async (playUrl) => {
-    const randomIdx = Math.floor(Math.random() * 8);
-    console.log("randoma idx:", randomIdx);
-    const { sound } = await Audio.Sound.createAsync(soundList[randomIdx]);
+  const playAnswerSound = async () => {
+    const { sound } = await Audio.Sound.createAsync(
+      pitchList[answer.current].soundSource
+    );
+    console.log(`정답 index: '${answer.current}'`);
+    console.log(`정답은 '${pitchList[answer.current].scale}' 입니다.`);
     setAnswerSound(sound);
 
-    console.log("sound play.");
+    await sound.playAsync();
+  };
+
+  const playSelectedSound = async (playIdx) => {
+    const { sound } = await Audio.Sound.createAsync(
+      pitchList[playIdx].soundSource
+    );
+    setSelectedSound(sound);
+
     await sound.playAsync();
   };
 
   const checkAnswer = (selectedPitch) => {
     setIsSelected(true);
-    setIsCorrect(selectedPitch === multiple[answer]);
+    setIsCorrect(selectedPitch === answer.current);
+    playSelectedSound(selectedPitch);
   };
 
   const getResult = () => {
@@ -85,6 +114,8 @@ function QuestionScreen({ navigation, route }) {
     // const multipleList = ["파", "레", "미", "도"];
     // setMultiple(multipleList);
     setAnswerAndMultipleChoice();
+    playCMajorScaleSound();
+    setTimeout(playAnswerSound, 3000);
   }, []);
 
   useEffect(() => {
@@ -106,9 +137,13 @@ function QuestionScreen({ navigation, route }) {
   }, [answerSound]);
 
   useEffect(() => {
-    playCMajorScaleSound();
-    setTimeout(playAnswerSound, 3000);
-  }, []);
+    return selectedSound
+      ? () => {
+          selectedSound.unloadAsync();
+          console.log("answer audio player is unloaded.");
+        }
+      : undefined;
+  }, [selectedSound]);
   return (
     <View style={styles.container}>
       <Text style={styles.currentMode}>
@@ -122,9 +157,16 @@ function QuestionScreen({ navigation, route }) {
             style={styles.multipleStyle}
             onPress={() => checkAnswer(choice)}
           >
-            {idx + 1}. {choice}
+            {idx + 1}. {pitchList[choice].scale}
           </Text>
         ))}
+      </View>
+      <View>
+        <Button
+          title="paly scale"
+          onPress={() => playCMajorScaleSound()}
+        ></Button>
+        <Button title="paly answer" onPress={() => playAnswerSound()}></Button>
       </View>
       {isSelected ? (
         isCorrect ? (
