@@ -5,10 +5,11 @@ function LevelScreen({ navigation, route }) {
   const { keySignature, harmonic } = route.params;
   const [levelList, setLevelList] = useState([]);
   const selectLevel = (level) => {
-    navigation.navigate("QuestionScreen", {
+    navigation.navigate("QuestionScreen_1", {
       keySignature,
       harmonic,
       level,
+      userCorrectList: [],
     });
   };
   useEffect(() => {

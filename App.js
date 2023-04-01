@@ -18,7 +18,16 @@ export default function App() {
         <Stack.Screen name="MainScreen" component={MainScreen} />
         <Stack.Screen name="HarmonicSelect" component={HarmonicSelect} />
         <Stack.Screen name="LevelScreen" component={LevelScreen} />
-        <Stack.Screen name="QuestionScreen" component={QuestionScreen} />
+        <Stack.Screen name="QuestionScreen_1" component={QuestionScreen} />
+        <Stack.Screen name="QuestionScreen_2" component={QuestionScreen} />
+        <Stack.Screen name="QuestionScreen_3" component={QuestionScreen} />
+        <Stack.Screen name="QuestionScreen_4" component={QuestionScreen} />
+        <Stack.Screen name="QuestionScreen_5" component={QuestionScreen} />
+        <Stack.Screen name="QuestionScreen_6" component={QuestionScreen} />
+        <Stack.Screen name="QuestionScreen_7" component={QuestionScreen} />
+        <Stack.Screen name="QuestionScreen_8" component={QuestionScreen} />
+        <Stack.Screen name="QuestionScreen_9" component={QuestionScreen} />
+        <Stack.Screen name="QuestionScreen_10" component={QuestionScreen} />
         <Stack.Screen
           name="HearingResultScreen"
           component={HearingResultScreen}
