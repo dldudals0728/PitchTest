@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 import { Audio } from "expo-av";
+import colorFactory from "../lib/colors";
 
 const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -299,7 +300,7 @@ function QuestionScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "teal",
+    backgroundColor: colorFactory.backgroundColor,
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",

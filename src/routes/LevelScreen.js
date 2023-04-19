@@ -1,5 +1,8 @@
-import { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { Animated, StyleSheet, Text, View } from "react-native";
+import colorFactory from "../lib/colors";
+import properties from "../lib/styles";
+import { ProgressBar } from "../components/CustomProgressBar";
 
 function LevelScreen({ navigation, route }) {
   const { keySignature, harmonic } = route.params;
@@ -12,18 +15,47 @@ function LevelScreen({ navigation, route }) {
       userCorrectList: [],
     });
   };
+  useEffect(() => {}, [levelList]);
   useEffect(() => {
     const levels = [
-      "1단계",
-      "2단계",
-      "3단계",
-      "4단계",
-      "5단계",
-      "6단계",
-      "7단계",
-      "8단계",
-      "9단계",
+      {
+        level: "level1",
+        progress: 10,
+      },
+      {
+        level: "level2",
+        progress: 20,
+      },
+      {
+        level: "level3",
+        progress: 30,
+      },
+      {
+        level: "level4",
+        progress: 40,
+      },
+      {
+        level: "level5",
+        progress: 50,
+      },
+      {
+        level: "level6",
+        progress: 60,
+      },
+      {
+        level: "level7",
+        progress: 70,
+      },
+      {
+        level: "level8",
+        progress: 80,
+      },
+      {
+        level: "level9",
+        progress: 90,
+      },
     ];
+
     setLevelList(levels);
   }, []);
   return (
@@ -32,15 +64,22 @@ function LevelScreen({ navigation, route }) {
         {keySignature} / {harmonic}
       </Text>
       <View style={styles.levelContainer}>
-        {levelList.map((level, idx) => (
-          <Text
-            key={idx}
-            style={styles.levelFont}
-            onPress={() => selectLevel(idx + 1)}
-          >
-            {level}: {(idx + 1) * 10}%
-          </Text>
-        ))}
+        {levelList.map((levelObject, idx) => {
+          return (
+            <View key={idx} style={{ width: "100%" }}>
+              <View>
+                <Text
+                  style={styles.levelFont}
+                  onPress={() => selectLevel(idx + 1)}
+                >
+                  {levelObject.level}
+                </Text>
+                {/* <Text style={styles.levelFont}>{levelObject.progress}</Text> */}
+                <ProgressBar totalStep={100} nowStep={levelObject.progress} />
+              </View>
+            </View>
+          );
+        })}
       </View>
     </View>
   );
@@ -49,7 +88,7 @@ function LevelScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "teal",
+    backgroundColor: colorFactory.backgroundColor,
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
@@ -62,6 +101,8 @@ const styles = StyleSheet.create({
 
   levelContainer: {
     height: "70%",
+    width: properties.containerWidth,
+    marginRight: "6%",
     justifyContent: "space-around",
     alignItems: "center",
   },

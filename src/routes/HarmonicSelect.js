@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
+import colorFactory from "../lib/colors";
 
 function HarmonicSelect({ navigation, route }) {
   const { keySignature } = route.params;
@@ -46,7 +47,7 @@ function HarmonicSelect({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "teal",
+    backgroundColor: colorFactory.backgroundColor,
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
