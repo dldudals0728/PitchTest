@@ -1,7 +1,7 @@
 const colorFactory = {
   backgroundColor: "#B8E9FF",
-  progressColor: "#C0C0C0",
-  progressBackgroundColor: "#FFFFFF",
+  progressColor: "#FFFFFF",
+  progressBackgroundColor: "transparent",
   cardBackgroundColor: "#CCD2F0",
 };
 

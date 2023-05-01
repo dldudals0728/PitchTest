@@ -2,13 +2,17 @@ import { useEffect, useRef, useState } from "react";
 import {
   Button,
   Dimensions,
+  Image,
   Modal,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { Audio } from "expo-av";
 import colorFactory from "../lib/colors";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { ProgressBar } from "../components/CustomProgressBar";
 
 const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -271,28 +275,99 @@ function QuestionScreen({ navigation, route }) {
           </View>
         </View>
       </Modal>
-      <Text style={styles.currentMode}>
+      {/* <Text style={styles.currentMode}>
         {keySignature}: {harmonic}
-      </Text>
-      <View style={styles.multipleContainer}>
-        <Text style={styles.levelTitle}>{level}단계</Text>
-        {multiple.map((choice, idx) => (
-          <Text
-            key={idx}
-            style={styles.multipleStyle}
-            onPress={() => checkAnswer(choice)}
-          >
-            {idx + 1}. {pitchList[choice].scale}
+      </Text> */}
+      <Image
+        source={require("../../assets/ptichTestLogo.png")}
+        style={{ height: 92, resizeMode: "contain", marginBottom: 20 }}
+      />
+      <View style={styles.questionContainer}>
+        <View style={styles.questionTitleContainer}>
+          <Text style={styles.levelTitle}>
+            문제 {userCorrectList.length + 1}
           </Text>
-        ))}
+          <View
+            style={{ width: "100%", height: 3, backgroundColor: "skyblue" }}
+          ></View>
+          <Text style={styles.levelSubTitle}>
+            다음 재생되는 소리를 듣고 정답을 고르시오.
+          </Text>
+        </View>
+        <View style={styles.multipleContainer}>
+          {multiple.map((choice, idx) => (
+            <TouchableOpacity
+              key={idx}
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                width: "15%",
+                marginBottom: 8,
+              }}
+            >
+              <Text style={styles.multipleStyle}>{idx + 1}.</Text>
+              <Text style={styles.multipleStyle}>
+                {pitchList[choice].scale}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "flex-end",
+          }}
+        >
+          <View
+            style={{
+              width: "100%",
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <TouchableOpacity onPress={() => playAnswerSound()}>
+              <MaterialCommunityIcons
+                name="music-note"
+                style={styles.buttonStyle}
+                color="black"
+              />
+              <View style={{ alignItems: "center" }}>
+                <Text>보기</Text>
+                <Text>다시듣기</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => playCMajorScaleSound()}>
+              <MaterialCommunityIcons
+                name="piano"
+                style={styles.buttonStyle}
+                color="black"
+              />
+              <View style={{ alignItems: "center" }}>
+                <Text>스케일</Text>
+                <Text>다시듣기</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
-      <View>
+      <View style={styles.progressContainer}>
+        <View style={{ width: "100%", alignItems: "center", marginBottom: 6 }}>
+          <Text>테스트 진행도: 50%</Text>
+        </View>
+        <ProgressBar
+          totalStep={100}
+          nowStep={50}
+          showText={false}
+          barHeight={20}
+        />
+      </View>
+      {/* <View>
         <Button
           title="paly scale"
           onPress={() => playCMajorScaleSound()}
         ></Button>
         <Button title="paly answer" onPress={() => playAnswerSound()}></Button>
-      </View>
+      </View> */}
     </View>
   );
 }
@@ -304,12 +379,28 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
+    paddingHorizontal: 20,
+  },
+
+  questionContainer: {
+    width: "100%",
+    height: "50%",
+    backgroundColor: "aliceblue",
+    alignItems: "flex-start",
+    paddingVertical: 16,
+    paddingHorizontal: 12,
+    marginBottom: 20,
+  },
+
+  questionTitleContainer: {
+    width: "100%",
+    height: "25%",
+    justifyContent: "space-around",
+    marginBottom: 20,
   },
 
   multipleContainer: {
-    width: "80%",
-    height: "70%",
-    // backgroundColor: "tomato",
+    width: "100%",
     alignItems: "flex-start",
   },
 
@@ -320,13 +411,27 @@ const styles = StyleSheet.create({
   },
 
   levelTitle: {
-    fontSize: 24,
+    fontSize: 36,
+    fontWeight: "600",
+  },
+
+  levelSubTitle: {
+    fontSize: 16,
     fontWeight: "600",
   },
 
   multipleStyle: {
     fontSize: 28,
     fontWeight: "700",
+  },
+
+  buttonStyle: {
+    fontSize: 42,
+    paddingLeft: 3,
+  },
+
+  progressContainer: {
+    width: "100%",
   },
 
   correctText: {

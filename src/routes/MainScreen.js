@@ -27,7 +27,6 @@ function MainScreen({ navigation }) {
     setKSSelectModalVisible(true);
   };
   const selectKS = (keySignature) => {
-    console.log(keySignature);
     navigation.navigate("LevelScreen", {
       currentHarmonic,
       keySignature,
@@ -67,7 +66,7 @@ function MainScreen({ navigation }) {
           }}
         >
           <TouchableOpacity
-            style={{ ...styles.KSViewStyle, ...styles.viewShadow }}
+            style={styles.KSViewStyle}
             onPress={() => selectKS("natural")}
           >
             <View>
@@ -82,7 +81,7 @@ function MainScreen({ navigation }) {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            style={{ ...styles.KSViewStyle, ...styles.viewShadow }}
+            style={styles.KSViewStyle}
             onPress={() => selectKS("sharp")}
           >
             <View
@@ -114,7 +113,7 @@ function MainScreen({ navigation }) {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            style={{ ...styles.KSViewStyle, ...styles.viewShadow }}
+            style={styles.KSViewStyle}
             onPress={() => selectKS("flat")}
           >
             <View
@@ -154,7 +153,7 @@ function MainScreen({ navigation }) {
         />
         <View style={{ ...styles.subContainer, alignItems: "flex-end" }}>
           <TouchableOpacity
-            style={{ ...styles.mainCard, ...styles.viewShadow }}
+            style={styles.mainCard}
             onPress={() => showKSModal("single")}
           >
             <Text style={styles.keySignatureStyle}>단음</Text>
@@ -163,7 +162,7 @@ function MainScreen({ navigation }) {
             </View>
           </TouchableOpacity>
           <TouchableOpacity
-            style={{ ...styles.mainCard, ...styles.viewShadow }}
+            style={styles.mainCard}
             onPress={() => showKSModal("double")}
           >
             <Text style={styles.keySignatureStyle}>2화음</Text>
@@ -232,6 +231,7 @@ const styles = StyleSheet.create({
     backgroundColor: colorFactory.cardBackgroundColor,
     justifyContent: "space-between",
     padding: 10,
+    ...properties.viewBoxShadow,
   },
 
   keySignatureStyle: {
@@ -246,21 +246,13 @@ const styles = StyleSheet.create({
     height: "60%",
     padding: 10,
     justifyContent: "space-between",
+    ...properties.viewBoxShadow,
   },
 
   subTextStyle: {
     color: "white",
     fontSize: 16,
     fontWeight: "700",
-  },
-
-  viewShadow: {
-    shadowColor: "black",
-    shadowOffset: {
-      height: 5,
-      width: 4,
-    },
-    shadowOpacity: 0.3,
   },
 });
 
